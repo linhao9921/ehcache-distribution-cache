@@ -1,0 +1,19 @@
+syntax: glob
+*.ipr
+**.iml
+*.iws
+.DS_Store
+*/target/*
+*.classpath
+.project
+.settings
+*/bin/*
+*.metadata/*
+*.cache
+*.class
+*/classes/*
+dependency.log
+*.idea/
+*/out/
+target/*
+out
