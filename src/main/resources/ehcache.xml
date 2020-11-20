@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
          updateCheck="false" dynamicConfig="false" >
 
     <diskStore path="java.io.tmpdir"/>
@@ -14,14 +14,23 @@
     -->
 
     <!-- server1 的cacheManagerPeerProviderFactory配置 -->
+<!--    <cacheManagerPeerProviderFactory-->
+<!--            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"-->
+<!--            properties="hostName=172.20.32.11,-->
+<!--        port=10990,-->
+<!--        socketTimeoutMillis=2000,-->
+<!--        peerDiscovery=manual,-->
+<!--        rmiUrls=//172.20.32.8:10990/message"-->
+<!--    />-->
+
     <cacheManagerPeerProviderFactory
             class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
-            properties="hostName=localhost,
-        port=400001,
-        socketTimeoutMillis=2000,
-        peerDiscovery=manual,
-        rmiUrls=//192.168.8.32:40002/message|//192.168.5.231:40003/message"
-    />
+            properties="peerDiscovery=automatic, multicastGroupAddress=230.0.0.1,multicastGroupPort=4004, timeToLive=32"  />
+
+
+    <cacheManagerPeerListenerFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"
+            properties="port=4001,socketTimeoutMillis=20000" />
 
     <!--
         maxElementsInMemory：缓存中允许创建的最大对象数
@@ -32,7 +41,7 @@
         memoryStoreEvictionPolicy：缓存满了之后的淘汰算法。
         每一个小时更新一次缓存（1小时过期）
     -->
-    <defaultCache maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="30" timeToLiveSeconds="30" overflowToDisk="false" />
+    <defaultCache maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="false" />
 
 
     <cache name="message"
@@ -55,7 +64,7 @@
             -->
         <!-- 监听RMI同步缓存对象配置 注册相应的的缓存监听类，用于处理缓存事件，如put,remove,update,和expire -->
         <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
-                properties="replicateAsynchronously=true,
+                properties="replicateAsynchronously=false,
                             replicatePuts=true,
                             replicateUpdates=true,
                             replicateUpdatesViaCopy=false,

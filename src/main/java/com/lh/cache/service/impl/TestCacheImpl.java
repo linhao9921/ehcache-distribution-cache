@@ -32,7 +32,7 @@ public class TestCacheImpl implements TestCache {
     @Cacheable(value = "message", key = "#id")
     public Message get(int id) {
         logger.info("get========================{}", id);
-        return new Message(1, "测试ehcache缓存");
+        return new Message(id, "测试ehcache缓存[id=" + id + "]");
     }
 
     @Override
