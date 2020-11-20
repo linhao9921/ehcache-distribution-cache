@@ -58,6 +58,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-logging</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
     <!--开启 cache 缓存-->
     <dependency>
       <groupId>org.springframework.boot</groupId>

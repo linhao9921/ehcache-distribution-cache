@@ -4,4 +4,9 @@ server:
 spring:
   application:
     name: ehcache-distribution-cache
-
+logging:
+  level:
+    root: debug
+  pattern:
+    console: '%clr(%d{yyyy-MM-dd} [%thread] %-5level %logger{50} - %msg%n)'
+  path: '/home/logs/springboot'

@@ -20,7 +20,7 @@
         port=400001,
         socketTimeoutMillis=2000,
         peerDiscovery=manual,
-        rmiUrls=//192.168.8.32:400002/message|//192.168.5.231:400003/message"
+        rmiUrls=//192.168.8.32:40002/message|//192.168.5.231:40003/message"
     />
 
     <!--
