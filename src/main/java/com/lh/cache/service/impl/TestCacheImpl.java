@@ -2,6 +2,7 @@ package com.lh.cache.service.impl;
 
 import com.lh.cache.dto.Message;
 import com.lh.cache.service.TestCache;
+import com.lh.cache.util.NetworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -32,7 +33,7 @@ public class TestCacheImpl implements TestCache {
     @Cacheable(value = "message", key = "#id")
     public Message get(int id) {
         logger.info("get========================{}", id);
-        return new Message(id, "测试ehcache缓存[id=" + id + "]");
+        return new Message(id, "测试ehcache缓存[id=" + id + "]; ip=" + NetworkUtil.getLocalId());
     }
 
     @Override
