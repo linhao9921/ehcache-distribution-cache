@@ -5,6 +5,7 @@
 
     <diskStore path="java.io.tmpdir"/>
 
+    <!--方式1-->
     <!--
         集群多台服务器中的缓存，这里是要同步一些服务器的缓存
         server1 hostName:192.168.8.9 port:400001 cacheName:mobileCache
@@ -12,7 +13,6 @@
         server3 hostName:192.168.8.231 port:400003 cacheName:mobileCache
         注意：每台要同步缓存的服务器的RMI通信socket端口都不一样，在配置的时候注意设置
     -->
-
     <!-- server1 的cacheManagerPeerProviderFactory配置 -->
 <!--    <cacheManagerPeerProviderFactory-->
 <!--            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"-->
@@ -23,6 +23,7 @@
 <!--        rmiUrls=//172.20.32.8:10990/message"-->
 <!--    />-->
 
+    <!--方式2： 自动发现方式-->
     <!--
         集群多台服务器中的缓存工厂,采用automatic方式，利用广播方式连接
         peerDiscovery=automatic: 自动发现
@@ -36,25 +37,50 @@
             128是限制在同一个大洲
             255是不限制
     -->
+<!--    <cacheManagerPeerProviderFactory-->
+<!--            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"-->
+<!--            properties="peerDiscovery=automatic,multicastGroupAddress=230.0.0.1,multicastGroupPort=4004,timeToLive=32"  />-->
+
+    <!--方式3： 自动发现(redis作为注册中心)方式-->
+    <!--
+        集群多台服务器中的缓存工厂,采用automatic方式，利用广播方式连接
+        peerDiscovery=redis_register_center_automatic: 基于redis注册中心自动发现
+        redisRegisterCenterHost=xxx.xxx.xxx.xxx： redis注册中心地址
+        redisRegisterCenterPort=6379： redis注册中心端口
+        redisRegisterCenterKey=xxx： 注册中心key(每个服务唯一)
+        socketTimeout=2000： redis执行超时时间
+        heartBeatSenderInterval=5000: 注册中心发送心跳时间间隔
+        heartBeatStaleTime=-1： 心跳未发送的最大允许节点存活时间
+        heartBeatReceiverInterval=2500: 注册中心接受心跳时间间隔
+    -->
     <cacheManagerPeerProviderFactory
-            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
-            properties="peerDiscovery=automatic,multicastGroupAddress=230.0.0.1,multicastGroupPort=4004,timeToLive=32"  />
+            class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"
+            properties="peerDiscovery=redis_register_center_automatic
+                ,redisRegisterCenterHost=172.20.17.67
+                ,redisRegisterCenterPort=6379
+                ,redisRegisterCenterKey=ehcache_distribution:cache:register:center
+                ,socketTimeout=3000
+                ,heartBeatSenderInterval=3000
+                ,heartBeatStaleTime=6100
+                ,heartBeatReceiverInterval=2000"  />
 
     <!--
         集群多台服务器中的缓存监听器工厂
-        port: 发送心跳的端口
-        socketTimeoutMillis： socket超时时间
+        port: 建立RMI连接的端口
+        socketTimeoutMillis： 建立RMI连接的socket超时时间
     -->
     <cacheManagerPeerListenerFactory
             class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"
             properties="port=4001,socketTimeoutMillis=20000" />
 
     <!--
-        自定义
+        自定义管理器事件监听工厂
     -->
 <!--    <cacheManagerEventListenerFactory-->
 <!--            class="com.lh.cache.factory.RmiCacheManagerEventListenerFactory"-->
 <!--            properties="port=4001,socketTimeoutMillis=20000" />-->
+
+
 
     <!--
         默认缓存时间设置
