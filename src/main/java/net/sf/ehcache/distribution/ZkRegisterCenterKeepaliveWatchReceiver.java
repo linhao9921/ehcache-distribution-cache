@@ -76,10 +76,10 @@ public final class ZkRegisterCenterKeepaliveWatchReceiver {
                 LOG.debug("Get znode[{}] success. size: {}.", path, rmiUrlProviders.size());
                 for (String rmiUrlProvider : rmiUrlProviders) {
                     LOG.debug("Get znode[{}] success. rmiUrlProvider: {}.", path, rmiUrlProvider);
-                    byte[] data = this.peerProvider.getClient().getData().forPath(path + this.peerProvider.processZnodePath(rmiUrlProvider));
-                    if (data != null && data.length > 0) {
-                        String peerUrls = new String(data);
-                        if (peerUrls.startsWith("Provider-")) {
+                    if (rmiUrlProvider.startsWith("Provider-")) {
+                        byte[] data = this.peerProvider.getClient().getData().forPath(path + this.peerProvider.processZnodePath(rmiUrlProvider));
+                        if (data != null && data.length > 0) {
+                            String peerUrls = new String(data);
                             if (self(peerUrls)) {
                                 if (LOG.isDebugEnabled()) {
                                     LOG.debug("ZkRegisterCenter receiver peerUrls: {} is self, skip...", peerUrls);
