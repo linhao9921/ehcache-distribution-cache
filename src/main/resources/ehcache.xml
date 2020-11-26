@@ -146,4 +146,34 @@
         <!-- 用于在初始化缓存，以及自动设置 -->
         <bootstrapCacheLoaderFactory class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory"/>
     </cache>
+
+
+    <cache name="message2"
+           maxElementsInMemory="10000"
+           eternal="false"
+           overflowToDisk="true"
+           timeToIdleSeconds="1800"
+           timeToLiveSeconds="3600"
+           memoryStoreEvictionPolicy="LFU">
+        <!--
+            RMI缓存分布同步查找 class使用net.sf.ehcache.distribution.RMICacheReplicatorFactory
+            这个工厂支持以下属性：
+                replicatePuts=true | false – 当一个新元素增加到缓存中的时候是否要复制到其他的peers。默认是true。
+                replicateUpdates=true | false – 当一个已经在缓存中存在的元素被覆盖时是否要进行复制。默认是true。
+                replicateRemovals= true | false – 当元素移除的时候是否进行复制。默认是true。
+                replicateAsynchronously=true | false – 复制方式是异步的指定为true时，还是同步的，指定为false时。默认是true。
+                replicatePutsViaCopy=true | false – 当一个新增元素被拷贝到其他的cache中时是否进行复制指定为true时为复制，默认是true。
+                replicateUpdatesViaCopy=true | false – 当一个元素被拷贝到其他的cache中时是否进行复制指定为true时为复制，默认是true。
+                asynchronousReplicationIntervalMillis=1000
+            -->
+        <!-- 监听RMI同步缓存对象配置 注册相应的的缓存监听类，用于处理缓存事件，如put,remove,update,和expire -->
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                properties="replicateAsynchronously=false,
+                            replicatePuts=true,
+                            replicateUpdates=true,
+                            replicateUpdatesViaCopy=false,
+                            replicateRemovals=true "/>
+        <!-- 用于在初始化缓存，以及自动设置 -->
+        <bootstrapCacheLoaderFactory class="net.sf.ehcache.distribution.RMIBootstrapCacheLoaderFactory"/>
+    </cache>
 </ehcache>

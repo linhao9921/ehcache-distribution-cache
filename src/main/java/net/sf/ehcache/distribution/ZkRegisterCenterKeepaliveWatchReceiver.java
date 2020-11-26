@@ -82,10 +82,10 @@ public final class ZkRegisterCenterKeepaliveWatchReceiver {
                         if (peerUrls.startsWith("Provider-")) {
                             if (self(peerUrls)) {
                                 if (LOG.isDebugEnabled()) {
-                                    LOG.debug("RedisRegisterCenter receiver peerUrls: {} is self, skip...", peerUrls);
+                                    LOG.debug("ZkRegisterCenter receiver peerUrls: {} is self, skip...", peerUrls);
                                 }
                             } else {
-                                LOG.debug("RedisRegisterCenter receiver peerUrls: {}.", peerUrls);
+                                LOG.debug("ZkRegisterCenter receiver peerUrls: {}.", peerUrls);
                                 // 处理注册地址
                                 processRmiUrls(peerUrls, PathChildrenCacheEvent.Type.CHILD_ADDED);
                             }
@@ -210,10 +210,10 @@ public final class ZkRegisterCenterKeepaliveWatchReceiver {
                     String peerUrls = new String(event.getData().getData());
                     if (self(peerUrls)) {
                         if (LOG.isDebugEnabled()) {
-                            LOG.debug("RedisRegisterCenter receiver peerUrls: {} is self, skip...", peerUrls);
+                            LOG.debug("ZkRegisterCenter receiver peerUrls: {} is self, skip...", peerUrls);
                         }
                     } else {
-                        LOG.debug("RedisRegisterCenter receiver peerUrls: {}.", peerUrls);
+                        LOG.debug("ZkRegisterCenter receiver peerUrls: {}.", peerUrls);
                         // 处理注册地址
                         processRmiUrls(peerUrls, event.getType());
                     }

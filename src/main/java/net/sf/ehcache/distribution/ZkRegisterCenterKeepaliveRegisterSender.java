@@ -201,7 +201,6 @@ public final class ZkRegisterCenterKeepaliveRegisterSender {
          */
         ZkRegisterCenterSenderThread() {
             super("ZKRegisterCenter AutoRegister Sender Thread");
-            setDaemon(true);
         }
 
 
