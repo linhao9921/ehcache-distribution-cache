@@ -32,7 +32,6 @@ public final class ZkRegisterCenterKeepaliveRegisterSender {
     private final String serverName;
 
     private ZkRegisterCenterSenderThread senderThread;
-    private long heartBeatSenderInterval = DEFAULT_AUTOR_EGISTER_INTERVAL;
 
     private volatile boolean stopped;
     private volatile boolean online;
@@ -214,7 +213,7 @@ public final class ZkRegisterCenterKeepaliveRegisterSender {
                 }
 
                 try {
-                    sleep(heartBeatSenderInterval);
+                    sleep(DEFAULT_AUTOR_EGISTER_INTERVAL);
                 } catch (InterruptedException e) {
                     if (!stopped) {
                         LOG.error("Error receiving heartbeat. Initial cause was " + e.getMessage(), e);
