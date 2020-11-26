@@ -29,8 +29,22 @@ public class RMICacheManagerExtendsPeerProviderFactory extends RMICacheManagerPe
     private static final String HEARTBEAT_RECEIVER_INTERVAL = "heartBeatReceiverInterval";
     private static final String HEARTBEAT_STALE_TIME = "heartBeatStaleTime";
 
+    private static final int DEFAULT_SESSION_TIMEOUT_MS = 5000;
+    private static final int DEFAULT_CONNECTION_TIMEOUT_MS = 5000;
+    private static final int DEFAULT_RETRY_POLICY_BASE_SLEEP_TIME_MS = 100;
+    private static final int DEFAULT_RETRY_POLICY_MAX_RETRIES = 3;
+
+    private static final String ZK_REGISTER_CENTER_ADDRESS = "zkRegisterCenterAddress";
+    private static final String SESSION_TIMEOUT_MS = "sessionTimeoutMs";
+    private static final String CONNECTION_TIMEOUT_MS = "connectionTimeoutMs";
+    private static final String RETRY_POLICY_BASE_SLEEP_TIME_MS = "retryPolicyBaseSleepTimeMs";
+    private static final String RETRY_POLICY_MAX_RETRIES = "retryPolicyMaxRetries";
+    private static final String ZK_REGISTER_CENTER_NAMESPACE = "zkRegisterCenterNamespace";
+    private static final String ZK_REGISTER_CENTER_SERVER_NAME = "serverName";
+
     private static final String PEER_DISCOVERY = "peerDiscovery";
     private static final String REDIS_AUTOMATIC_PEER_DISCOVERY = "redis_register_center_automatic";
+    private static final String ZK_AUTOMATIC_PEER_DISCOVERY = "zk_register_center_automatic";
 
     @Override
     public CacheManagerPeerProvider createCachePeerProvider(CacheManager cacheManager, Properties properties) throws CacheException {
@@ -38,6 +52,8 @@ public class RMICacheManagerExtendsPeerProviderFactory extends RMICacheManagerPe
         // 判断是否使用基于redis的自动发现
         if (REDIS_AUTOMATIC_PEER_DISCOVERY.equalsIgnoreCase(peerDiscovery)) {
             return createRedisAutomaticallyConfiguredCachePeerProvider(cacheManager, properties);
+        } else if (ZK_AUTOMATIC_PEER_DISCOVERY.equalsIgnoreCase(peerDiscovery)) {
+            return createZkAutomaticallyConfiguredCachePeerProvider(cacheManager, properties);
         }
 
         return super.createCachePeerProvider(cacheManager, properties);
@@ -85,6 +101,39 @@ public class RMICacheManagerExtendsPeerProviderFactory extends RMICacheManagerPe
 
         return new RedisRegisterCenterRMICacheManagerPeerProvider(cacheManager, redisConfigCenterHost, redisConfigCenterPort
                 , redisConfigCenterKey, socketTimeout, heartBeatSenderInterval, heartBeatStaleTime, heartBeatReceiverInterval);
+    }
+
+    /**
+     * 创建基于zk自动发现的缓存管理成员提供者
+     * @param cacheManager
+     * @param properties
+     * @return
+     */
+    private CacheManagerPeerProvider createZkAutomaticallyConfiguredCachePeerProvider(CacheManager cacheManager, Properties properties) {
+        // 注册中心地址
+        String zkConfigCenterAddress = getStringConfig(properties, ZK_REGISTER_CENTER_ADDRESS);
+
+        // 注册中心session执行超时时间
+        int sessionTimeoutMs = getIntConfig(properties, SESSION_TIMEOUT_MS, DEFAULT_SESSION_TIMEOUT_MS);
+
+        // 注册中心连接超时时间
+        int connectionTimeoutMs = getIntConfig(properties, CONNECTION_TIMEOUT_MS, DEFAULT_CONNECTION_TIMEOUT_MS);
+
+        // 注册中心重试策略基础睡眠时间
+        int retryPolicyBaseSleepTimeMs = getIntConfig(properties, RETRY_POLICY_BASE_SLEEP_TIME_MS, DEFAULT_RETRY_POLICY_BASE_SLEEP_TIME_MS);
+
+        // 注册中心重试策略最大重试次数
+        int retryPolicyMaxRetries = getIntConfig(properties, RETRY_POLICY_MAX_RETRIES, DEFAULT_RETRY_POLICY_MAX_RETRIES);
+
+        // 注册中心的隔离名称
+        String zkConfigCenterNamespace = getStringConfig(properties, ZK_REGISTER_CENTER_NAMESPACE);
+
+        // 注册中心的服务名称
+        String zkConfigCenterServerName = getStringConfig(properties, ZK_REGISTER_CENTER_SERVER_NAME);
+
+        return new ZkRegisterCenterRMICacheManagerPeerProvider(cacheManager, zkConfigCenterAddress
+                , sessionTimeoutMs, connectionTimeoutMs, retryPolicyBaseSleepTimeMs
+                , retryPolicyMaxRetries, zkConfigCenterNamespace, zkConfigCenterServerName);
     }
 
     private String getStringConfig(Properties properties, String key) throws CacheException {

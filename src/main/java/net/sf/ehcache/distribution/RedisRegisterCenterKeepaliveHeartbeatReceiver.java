@@ -43,7 +43,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatReceiver {
      * @param peerProvider 成员提供者
      * @param registerCenter 注册中心
      */
-    public RedisRegisterCenterKeepaliveHeartbeatReceiver(RedisRegisterCenterRMICacheManagerPeerProvider peerProvider
+    RedisRegisterCenterKeepaliveHeartbeatReceiver(RedisRegisterCenterRMICacheManagerPeerProvider peerProvider
             , JedisPool registerCenter, String registerCenterKey) {
         this.peerProvider = peerProvider;
         this.registerCenter = registerCenter;
@@ -63,7 +63,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatReceiver {
     /**
      * Shutdown the heartbeat.
      */
-    public final void dispose() {
+    final void dispose() {
         LOG.debug("dispose RedisRegisterCenter heartbeat receiver called");
         this.processingThreadPool.shutdownNow();
         this.stopped = true;
@@ -82,7 +82,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatReceiver {
      * 设置心跳间隔时间
      * @param heartBeatReceiverInterval
      */
-    public void setHeartBeatReceiverInterval(long heartBeatReceiverInterval) {
+    void setHeartBeatReceiverInterval(long heartBeatReceiverInterval) {
         if (heartBeatReceiverInterval < MINIMUM_HEARTBEAT_INTERVAL) {
             LOG.warn("Trying to set heartbeat interval too low. Using MINIMUM_HEARTBEAT_INTERVAL instead.");
             this.heartBeatReceiverInterval = MINIMUM_HEARTBEAT_INTERVAL;
@@ -111,7 +111,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatReceiver {
         /**
          * 构造方法
          */
-        public RedisRegisterCenterReceiverThread() {
+        RedisRegisterCenterReceiverThread() {
             super("RedisRegisterCenter Heartbeat Receiver Thread");
             setDaemon(true);
         }
@@ -171,25 +171,22 @@ public final class RedisRegisterCenterKeepaliveHeartbeatReceiver {
         private boolean self(String rmiUrls) {
             CacheManager cacheManager = peerProvider.getCacheManager();
             CacheManagerPeerListener cacheManagerPeerListener = cacheManager.getCachePeerListener("RMI");
-            if (cacheManagerPeerListener == null) {
-                return false;
+            if (cacheManagerPeerListener != null) {
+                // 获取当前所有的注册成员
+                List boundCachePeers = cacheManagerPeerListener.getBoundCachePeers();
+                if (boundCachePeers != null && boundCachePeers.size() > 0) {
+                    try {
+                        CachePeer boundCachePeer = (CachePeer) boundCachePeers.get(0);
+                        String urlBase = boundCachePeer.getUrlBase();
+                        int baseUrlMatch = rmiUrls.indexOf(urlBase);
+                        return baseUrlMatch != -1;
+                    } catch (RemoteException e) {
+                        LOG.error("Error getting url base", e);
+                        return false;
+                    }
+                }
             }
-
-            // 获取当前所有的注册成员
-            List boundCachePeers = cacheManagerPeerListener.getBoundCachePeers();
-            if (boundCachePeers == null || boundCachePeers.size() == 0) {
-                return false;
-            }
-
-            CachePeer boundCachePeer = (CachePeer) boundCachePeers.get(0);
-            try {
-                String urlBase = boundCachePeer.getUrlBase();
-                int baseUrlMatch = rmiUrls.indexOf(urlBase);
-                return baseUrlMatch != -1;
-            } catch (RemoteException e) {
-                LOG.error("Error getting url base", e);
-                return false;
-            }
+            return false;
         }
 
         /**

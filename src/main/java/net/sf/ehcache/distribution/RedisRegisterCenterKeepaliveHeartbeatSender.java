@@ -49,7 +49,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatSender {
      * Initial
      */
     final void init() {
-        LOG.debug("initial RedisRegisterCenter heartbeat receiver called");
+        LOG.debug("initial RedisRegisterCenter heartbeat sender called");
         this.senderThread = new RedisRegisterCenterSenderThread();
         this.senderThread.start();
     }
@@ -57,7 +57,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatSender {
     /**
      * Shutdown this heartbeat sender
      */
-    public final synchronized void dispose() {
+    final synchronized void dispose() {
         this.stopped = true;
         notifyAll();
         this.senderThread.interrupt();
@@ -67,7 +67,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatSender {
      * 获取心跳间隔时间
      * @return
      */
-    public long getHeartBeatSenderInterval() {
+    long getHeartBeatSenderInterval() {
         return heartBeatSenderInterval;
     }
 
@@ -75,7 +75,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatSender {
      * 设置心跳间隔时间
      * @param heartBeatSenderInterval
      */
-    public void setHeartBeatSenderInterval(long heartBeatSenderInterval) {
+    void setHeartBeatSenderInterval(long heartBeatSenderInterval) {
         if (heartBeatSenderInterval < MINIMUM_HEARTBEAT_INTERVAL) {
             LOG.warn("Trying to set heartbeat interval too low. Using MINIMUM_HEARTBEAT_INTERVAL instead.");
             this.heartBeatSenderInterval = MINIMUM_HEARTBEAT_INTERVAL;
@@ -88,7 +88,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatSender {
      * 返回心跳信号被视为过时的时间
      * @return
      */
-    public long getHeartBeatStaleTime() {
+    long getHeartBeatStaleTime() {
         if (this.heartBeatStaleTime < 0) {
             return (this.heartBeatSenderInterval * 2) + ONE_HUNDRED_MS;
         } else {
@@ -100,7 +100,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatSender {
      * 将心跳停止时间设置为默认值（（2*HeartBeatSenderInterval）+100）毫秒。这对于测试很有用，但不建议用于生产。此方法是静态的，因此会影响所有用户的过期时间。
      * @param heartBeatStaleTime
      */
-    public void setHeartBeatStaleTime(long heartBeatStaleTime) {
+    void setHeartBeatStaleTime(long heartBeatStaleTime) {
         this.heartBeatStaleTime = heartBeatStaleTime;
     }
 
@@ -158,7 +158,7 @@ public final class RedisRegisterCenterKeepaliveHeartbeatSender {
         /**
          * 构造方法
          */
-        public RedisRegisterCenterSenderThread() {
+        RedisRegisterCenterSenderThread() {
             super("RedisRegisterCenter Heartbeat Sender Thread");
             setDaemon(true);
         }
