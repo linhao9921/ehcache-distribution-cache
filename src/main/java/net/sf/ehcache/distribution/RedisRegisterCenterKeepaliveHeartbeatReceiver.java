@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-24 10:33
  * @Version 1.0
  * @Desciption 基于redis的注册中心心跳接收者

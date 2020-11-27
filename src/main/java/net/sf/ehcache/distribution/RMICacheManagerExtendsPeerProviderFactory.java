@@ -7,7 +7,7 @@ import net.sf.ehcache.util.PropertyUtil;
 import java.util.Properties;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-23 18:24
  * @Version 1.0
  * @Desciption 扩展RMICacheManagerPeerProviderFactory的PEER_DISCOVERY(扩展成员发现方式)

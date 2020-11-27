@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-25 15:01
  * @Version 1.0
  * @Desciption 基于zookeeper的自动注册发送者

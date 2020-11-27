@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-23 10:00
  * @Version 1.0
  * @Desciption

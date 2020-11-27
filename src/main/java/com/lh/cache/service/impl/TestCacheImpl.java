@@ -11,7 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-20 11:03
  * @Version 1.0
  * @Desciption

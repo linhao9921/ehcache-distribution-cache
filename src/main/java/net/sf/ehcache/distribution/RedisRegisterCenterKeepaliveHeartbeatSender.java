@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 import java.util.*;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-24 11:32
  * @Version 1.0
  * @Desciption 基于redis的注册中心心跳发送者

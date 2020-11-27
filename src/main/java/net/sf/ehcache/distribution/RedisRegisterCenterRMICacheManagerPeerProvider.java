@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-23 18:42
  * @Version 1.0
  * @Desciption

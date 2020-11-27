@@ -7,7 +7,7 @@ import net.sf.ehcache.event.CacheManagerEventListenerFactory;
 import java.util.Properties;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-23 11:31
  * @Version 1.0
  * @Desciption rmi缓存管理事件监听工厂

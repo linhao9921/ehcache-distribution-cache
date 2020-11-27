@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-25 11:43
  * @Version 1.0
  * @Desciption

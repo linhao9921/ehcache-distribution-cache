@@ -1,7 +1,7 @@
 package com.lh.cache.dto;
 
 /**
- * @Author haol<haol @ jumei.com>
+ * @Author haol
  * @Date 20-11-20 11:07
  * @Version 1.0
  * @Desciption
