@@ -43,7 +43,7 @@
 
     <!--方式3： 自动发现(redis作为注册中心)方式-->
     <!--
-        集群多台服务器中的缓存工厂,采用automatic方式，利用广播方式连接
+        集群多台服务器中的缓存工厂,采用redis_register_center_automatic方式，利用redis方式连接
         peerDiscovery=redis_register_center_automatic: 基于redis注册中心自动发现
         redisRegisterCenterHost=xxx.xxx.xxx.xxx： redis注册中心地址
         redisRegisterCenterPort=6379： redis注册中心端口
@@ -66,8 +66,8 @@
 
     <!--方式4： 自动发现(zookeeper作为注册中心)方式-->
     <!--
-        集群多台服务器中的缓存工厂,采用automatic方式，利用广播方式连接
-        peerDiscovery=redis_register_center_automatic: 基于redis注册中心自动发现
+        集群多台服务器中的缓存工厂,采用zk_register_center_automatic方式，利用zk方式连接
+        peerDiscovery=zk_register_center_automatic: 基于zk注册中心自动发现
         zkRegisterCenterAddress=172.20.32.11:2181: 注册中心地址
         sessionTimeoutMs=5000: 注册中心session执行超时时间
         connectionTimeoutMs=5000: 注册中心连接超时时间
@@ -76,16 +76,32 @@
         zkRegisterCenterNamespace=xxx: 注册中心的隔离名称
         serverName=xxx: 注册中心的服务名称
     -->
+<!--    <cacheManagerPeerProviderFactory-->
+<!--            class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"-->
+<!--            properties="peerDiscovery=zk_register_center_automatic-->
+<!--                ,zkRegisterCenterAddress=172.20.32.11:2181-->
+<!--                ,sessionTimeoutMs=60000-->
+<!--                ,connectionTimeoutMs=5000-->
+<!--                ,retryPolicyBaseSleepTimeMs=100-->
+<!--                ,retryPolicyMaxRetries=3-->
+<!--                ,zkRegisterCenterNamespace=ehcache_distribution_register_center-->
+<!--                ,serverName=ehcache_distribution_test"  />-->
+
+    <!--方式5： 自动发现(etcd作为注册中心)方式-->
+    <!--
+        集群多台服务器中的缓存工厂,采用etcd_register_center_automatic方式，利用etcd方式连接
+        peerDiscovery=etcd_register_center_automatic: 基于etcd注册中心自动发现
+        etcdRegisterCenterAddress=http://172.20.32.11:2379: 注册中心地址
+        etcdRegisterCenterNamespace=xxx: 注册中心的隔离名称
+        serverName=xxx: 注册中心的服务名称
+    -->
     <cacheManagerPeerProviderFactory
             class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"
-            properties="peerDiscovery=zk_register_center_automatic
-                ,zkRegisterCenterAddress=172.20.32.11:2181
-                ,sessionTimeoutMs=60000
-                ,connectionTimeoutMs=5000
-                ,retryPolicyBaseSleepTimeMs=100
-                ,retryPolicyMaxRetries=3
-                ,zkRegisterCenterNamespace=ehcache_distribution_register_center
-                ,serverName=ehcache_distribution_test"  />
+            properties="peerDiscovery=etcd_register_center_automatic
+                ,etcdRegisterCenterAddress=http://172.20.32.11:2379
+                ,etcdRegisterCenterNamespace=ehcache_distribution_register_center
+                ,serverName=ehcache_distribution_test
+                ,etcdRegisterCenterLeaseTtlSeconds=60"  />
 
     <!--
         集群多台服务器中的缓存监听器工厂

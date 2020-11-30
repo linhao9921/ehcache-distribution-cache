@@ -26,7 +26,7 @@ public final class ZkRegisterCenterKeepaliveRegisterSender {
 
     private static final Logger LOG = LoggerFactory.getLogger(ZkRegisterCenterKeepaliveRegisterSender.class.getName());
 
-    private static final int DEFAULT_AUTOR_EGISTER_INTERVAL = 5000;
+    private static final int DEFAULT_AUTO_EGISTER_INTERVAL = 5000;
 
     private final ZkRegisterCenterRMICacheManagerPeerProvider peerProvider;
     private final String serverName;
@@ -213,7 +213,7 @@ public final class ZkRegisterCenterKeepaliveRegisterSender {
                 }
 
                 try {
-                    sleep(DEFAULT_AUTOR_EGISTER_INTERVAL);
+                    sleep(DEFAULT_AUTO_EGISTER_INTERVAL);
                 } catch (InterruptedException e) {
                     if (!stopped) {
                         LOG.error("Error receiving heartbeat. Initial cause was " + e.getMessage(), e);

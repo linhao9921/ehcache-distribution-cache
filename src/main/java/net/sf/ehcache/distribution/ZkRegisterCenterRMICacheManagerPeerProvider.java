@@ -87,6 +87,9 @@ public class ZkRegisterCenterRMICacheManagerPeerProvider extends RMICacheManager
             // 基于zookeeper的自动注册发送者
             this.registerSender.dispose();
         } catch (IOException e) {
+            // 关闭zk的客户端
+            this.client.close();
+
             LOG.error(e.getMessage(), e);
             throw new CacheException(e);
         }

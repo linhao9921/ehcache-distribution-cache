@@ -42,9 +42,17 @@ public class RMICacheManagerExtendsPeerProviderFactory extends RMICacheManagerPe
     private static final String ZK_REGISTER_CENTER_NAMESPACE = "zkRegisterCenterNamespace";
     private static final String ZK_REGISTER_CENTER_SERVER_NAME = "serverName";
 
+    private static final long DEFAULT_ETCD_REGISTER_CENTER_LEASE_TTL_SECONDS = 60;
+
+    private static final String ETCD_REGISTER_CENTER_ADDRESS = "etcdRegisterCenterAddress";
+    private static final String ETCD_REGISTER_CENTER_NAMESPACE = "etcdRegisterCenterNamespace";
+    private static final String ETCD_REGISTER_CENTER_SERVER_NAME = "serverName";
+    private static final String ETCD_REGISTER_CENTER_LEASE_TTL_SECONDS = "etcdRegisterCenterLeaseTtlSeconds";
+
     private static final String PEER_DISCOVERY = "peerDiscovery";
     private static final String REDIS_AUTOMATIC_PEER_DISCOVERY = "redis_register_center_automatic";
     private static final String ZK_AUTOMATIC_PEER_DISCOVERY = "zk_register_center_automatic";
+    private static final String ETCD_AUTOMATIC_PEER_DISCOVERY = "etcd_register_center_automatic";
 
     @Override
     public CacheManagerPeerProvider createCachePeerProvider(CacheManager cacheManager, Properties properties) throws CacheException {
@@ -54,6 +62,8 @@ public class RMICacheManagerExtendsPeerProviderFactory extends RMICacheManagerPe
             return createRedisAutomaticallyConfiguredCachePeerProvider(cacheManager, properties);
         } else if (ZK_AUTOMATIC_PEER_DISCOVERY.equalsIgnoreCase(peerDiscovery)) {
             return createZkAutomaticallyConfiguredCachePeerProvider(cacheManager, properties);
+        } else if (ETCD_AUTOMATIC_PEER_DISCOVERY.equalsIgnoreCase(peerDiscovery)) {
+            return createEtcdAutomaticallyConfiguredCachePeerProvider(cacheManager, properties);
         }
 
         return super.createCachePeerProvider(cacheManager, properties);
@@ -136,6 +146,28 @@ public class RMICacheManagerExtendsPeerProviderFactory extends RMICacheManagerPe
                 , retryPolicyMaxRetries, zkConfigCenterNamespace, zkConfigCenterServerName);
     }
 
+    /**
+     * 创建基于etcd自动发现的缓存管理成员提供者
+     * @param cacheManager
+     * @param properties
+     * @return
+     */
+    private CacheManagerPeerProvider createEtcdAutomaticallyConfiguredCachePeerProvider(CacheManager cacheManager, Properties properties) {
+        // 注册中心地址
+        String etcdConfigCenterAddress = getStringConfig(properties, ETCD_REGISTER_CENTER_ADDRESS);
+
+        // 注册中心的隔离名称
+        String etcdConfigCenterNamespace = getStringConfig(properties, ETCD_REGISTER_CENTER_NAMESPACE);
+
+        // 注册中心的服务名称
+        String etcdConfigCenterServerName = getStringConfig(properties, ETCD_REGISTER_CENTER_SERVER_NAME);
+
+        long longLeaseTtlSeconds = getLongConfig(properties, ETCD_REGISTER_CENTER_LEASE_TTL_SECONDS, DEFAULT_ETCD_REGISTER_CENTER_LEASE_TTL_SECONDS);
+
+        return new EtcdRegisterCenterRMICacheManagerPeerProvider(cacheManager, etcdConfigCenterAddress
+                , etcdConfigCenterNamespace, etcdConfigCenterServerName, longLeaseTtlSeconds);
+    }
+
     private String getStringConfig(Properties properties, String key) throws CacheException {
         String config = PropertyUtil.extractAndLogProperty(key, properties);
         if (config == null || config.length() == 0) {
@@ -151,6 +183,17 @@ public class RMICacheManagerExtendsPeerProviderFactory extends RMICacheManagerPe
             configInt = defaultVal;
         } else {
             configInt = Integer.valueOf(config);
+        }
+        return configInt;
+    }
+
+    private long getLongConfig(Properties properties, String key, long defaultVal) {
+        String config = PropertyUtil.extractAndLogProperty(key, properties);
+        long configInt;
+        if (config == null || config.length() == 0) {
+            configInt = defaultVal;
+        } else {
+            configInt = Long.valueOf(config);
         }
         return configInt;
     }
