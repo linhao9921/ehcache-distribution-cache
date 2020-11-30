@@ -99,12 +99,42 @@ public class EtcdRegisterCenterRMICacheManagerPeerProvider extends RMICacheManag
 
     @Override
     public final void registerPeer(String rmiUrl) {
-
+        // 存储地址
+        peerUrls.put(rmiUrl, new Date());
     }
 
     @Override
     public final synchronized List listRemoteCachePeers(Ehcache cache) throws CacheException {
-        return new ArrayList();
+        List<CachePeer> remoteCachePeers = new ArrayList<>();
+
+        synchronized (peerUrls) {
+            for (Object o : peerUrls.keySet()) {
+                String rmiUrl = (String) o;
+                String rmiUrlCacheName = extractCacheName(rmiUrl);
+                try {
+                    if (!rmiUrlCacheName.equals(cache.getName())) {
+                        continue;
+                    }
+
+                    // 处理当前成员
+                    CachePeer cachePeer;
+                    try {
+                        cachePeer = lookupRemoteCachePeer(rmiUrl);
+                        remoteCachePeers.add(cachePeer);
+                    } catch (Exception e) {
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("Looking up rmiUrl " + rmiUrl + " through exception " + e.getMessage()
+                                    + ". This may be normal if a node has gone offline. Or it may indicate network connectivity difficulties", e);
+                        }
+                    }
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    throw new CacheException("Unable to list remote cache peers. Error was " + e.getMessage());
+                }
+            }
+        }
+
+        return remoteCachePeers;
     }
 
     @Override
