@@ -11,14 +11,22 @@
         server3 hostName:192.168.8.231 port:400003 cacheName:mobileCache
         注意：每台要同步缓存的服务器的RMI通信socket端口都不一样，在配置的时候注意设置
     -->
-    <!-- server1 的cacheManagerPeerProviderFactory配置 -->
+    <!-- server1(172.20.32.11) 的cacheManagerPeerProviderFactory配置 -->
     <cacheManagerPeerProviderFactory
             class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
-            properties="hostName=172.20.32.11,
-        port=10990,
-        socketTimeoutMillis=2000,
-        peerDiscovery=manual,
-        rmiUrls=//172.20.32.8:10990/message"
+            properties="hostName=172.20.32.11
+                        ,port=10990
+                        ,socketTimeoutMillis=2000
+                        ,peerDiscovery=manual
+                        ,rmiUrls=//172.20.32.8:10990/message"
+    <!-- server2(172.20.32.8) 的cacheManagerPeerProviderFactory配置 -->
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+            properties="hostName=172.20.32.8
+                        ,port=10990
+                        ,socketTimeoutMillis=2000
+                        ,peerDiscovery=manual
+                        ,rmiUrls=//172.20.32.11:10990/message"
     />
 
 
@@ -41,7 +49,10 @@
     -->
     <cacheManagerPeerProviderFactory
             class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
-            properties="peerDiscovery=automatic,multicastGroupAddress=230.0.0.1,multicastGroupPort=4004,timeToLive=32"  />
+            properties="peerDiscovery=automatic
+                        ,multicastGroupAddress=230.0.0.1
+                        ,multicastGroupPort=4004
+                        ,timeToLive=32"  />
 
 
 
@@ -62,13 +73,13 @@
     <cacheManagerPeerProviderFactory
             class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"
             properties="peerDiscovery=redis_register_center_automatic
-                ,redisRegisterCenterHost=172.20.17.67
-                ,redisRegisterCenterPort=6379
-                ,redisRegisterCenterKey=ehcache_distribution:cache:register:center
-                ,socketTimeout=3000
-                ,heartBeatSenderInterval=3000
-                ,heartBeatStaleTime=6100
-                ,heartBeatReceiverInterval=2000"  />
+                        ,redisRegisterCenterHost=172.20.17.67
+                        ,redisRegisterCenterPort=6379
+                        ,redisRegisterCenterKey=ehcache_distribution:cache:register:center
+                        ,socketTimeout=3000
+                        ,heartBeatSenderInterval=3000
+                        ,heartBeatStaleTime=6100
+                        ,heartBeatReceiverInterval=2000"  />
 
 
 
@@ -88,13 +99,13 @@
     <cacheManagerPeerProviderFactory
             class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"
             properties="peerDiscovery=zk_register_center_automatic
-                ,zkRegisterCenterAddress=172.20.32.11:2181
-                ,sessionTimeoutMs=60000
-                ,connectionTimeoutMs=5000
-                ,retryPolicyBaseSleepTimeMs=100
-                ,retryPolicyMaxRetries=3
-                ,zkRegisterCenterNamespace=ehcache_distribution_register_center
-                ,serverName=ehcache_distribution_test"  />
+                        ,zkRegisterCenterAddress=172.20.32.11:2181
+                        ,sessionTimeoutMs=60000
+                        ,connectionTimeoutMs=5000
+                        ,retryPolicyBaseSleepTimeMs=100
+                        ,retryPolicyMaxRetries=3
+                        ,zkRegisterCenterNamespace=ehcache_distribution_register_center
+                        ,serverName=ehcache_distribution_test"  />
 
 
 
@@ -110,15 +121,15 @@
     <cacheManagerPeerProviderFactory
             class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"
             properties="peerDiscovery=etcd_register_center_automatic
-                ,etcdRegisterCenterAddress=http://172.20.32.11:2379
-                ,etcdRegisterCenterNamespace=ehcache_distribution_register_center
-                ,serverName=ehcache_distribution_test
-                ,etcdRegisterCenterLeaseTtlSeconds=60"  />
+                        ,etcdRegisterCenterAddress=http://172.20.32.11:2379
+                        ,etcdRegisterCenterNamespace=ehcache_distribution_register_center
+                        ,serverName=ehcache_distribution_test
+                        ,etcdRegisterCenterLeaseTtlSeconds=60"  />
 
 ### 说明： 
 
   - 方式1（手动配置）
-  - 方式1（广播方式）
+  - 方式2（广播方式）
   
   以上两种为ehcache框架原有自带。
 
