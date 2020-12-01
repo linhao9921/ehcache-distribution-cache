@@ -237,10 +237,10 @@ public final class EtcdRegisterCenterKeepaliveRegisterSender {
             // 优先关闭观察者
             if (this.leaseKeepAliveClient != null) {
                 this.leaseKeepAliveClient.close();
-
-                // 重新自动注册
-                this.autoRegister();
             }
+
+            // 重新自动注册
+            this.autoRegister();
         }
     }
 
