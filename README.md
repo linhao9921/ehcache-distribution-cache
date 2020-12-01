@@ -12,14 +12,14 @@
         注意：每台要同步缓存的服务器的RMI通信socket端口都不一样，在配置的时候注意设置
     -->
     <!-- server1 的cacheManagerPeerProviderFactory配置 -->
-<!--    <cacheManagerPeerProviderFactory-->
-<!--            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"-->
-<!--            properties="hostName=172.20.32.11,-->
-<!--        port=10990,-->
-<!--        socketTimeoutMillis=2000,-->
-<!--        peerDiscovery=manual,-->
-<!--        rmiUrls=//172.20.32.8:10990/message"-->
-<!--    />-->
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+            properties="hostName=172.20.32.11,
+        port=10990,
+        socketTimeoutMillis=2000,
+        peerDiscovery=manual,
+        rmiUrls=//172.20.32.8:10990/message"
+    />
 
 
 
@@ -39,9 +39,9 @@
             128是限制在同一个大洲
             255是不限制
     -->
-<!--    <cacheManagerPeerProviderFactory-->
-<!--            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"-->
-<!--            properties="peerDiscovery=automatic,multicastGroupAddress=230.0.0.1,multicastGroupPort=4004,timeToLive=32"  />-->
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+            properties="peerDiscovery=automatic,multicastGroupAddress=230.0.0.1,multicastGroupPort=4004,timeToLive=32"  />
 
 
 
@@ -59,16 +59,16 @@
         heartBeatStaleTime=-1： 心跳未发送的最大允许节点存活时间
         heartBeatReceiverInterval=2500: 注册中心接受心跳时间间隔
     -->
-<!--    <cacheManagerPeerProviderFactory-->
-<!--            class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"-->
-<!--            properties="peerDiscovery=redis_register_center_automatic-->
-<!--                ,redisRegisterCenterHost=172.20.17.67-->
-<!--                ,redisRegisterCenterPort=6379-->
-<!--                ,redisRegisterCenterKey=ehcache_distribution:cache:register:center-->
-<!--                ,socketTimeout=3000-->
-<!--                ,heartBeatSenderInterval=3000-->
-<!--                ,heartBeatStaleTime=6100-->
-<!--                ,heartBeatReceiverInterval=2000"  />-->
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"
+            properties="peerDiscovery=redis_register_center_automatic
+                ,redisRegisterCenterHost=172.20.17.67
+                ,redisRegisterCenterPort=6379
+                ,redisRegisterCenterKey=ehcache_distribution:cache:register:center
+                ,socketTimeout=3000
+                ,heartBeatSenderInterval=3000
+                ,heartBeatStaleTime=6100
+                ,heartBeatReceiverInterval=2000"  />
 
 
 
@@ -85,16 +85,16 @@
         zkRegisterCenterNamespace=xxx: 注册中心的隔离名称
         serverName=xxx: 注册中心的服务名称
     -->
-<!--    <cacheManagerPeerProviderFactory-->
-<!--            class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"-->
-<!--            properties="peerDiscovery=zk_register_center_automatic-->
-<!--                ,zkRegisterCenterAddress=172.20.32.11:2181-->
-<!--                ,sessionTimeoutMs=60000-->
-<!--                ,connectionTimeoutMs=5000-->
-<!--                ,retryPolicyBaseSleepTimeMs=100-->
-<!--                ,retryPolicyMaxRetries=3-->
-<!--                ,zkRegisterCenterNamespace=ehcache_distribution_register_center-->
-<!--                ,serverName=ehcache_distribution_test"  />-->
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerExtendsPeerProviderFactory"
+            properties="peerDiscovery=zk_register_center_automatic
+                ,zkRegisterCenterAddress=172.20.32.11:2181
+                ,sessionTimeoutMs=60000
+                ,connectionTimeoutMs=5000
+                ,retryPolicyBaseSleepTimeMs=100
+                ,retryPolicyMaxRetries=3
+                ,zkRegisterCenterNamespace=ehcache_distribution_register_center
+                ,serverName=ehcache_distribution_test"  />
 
 
 
@@ -115,13 +115,15 @@
                 ,serverName=ehcache_distribution_test
                 ,etcdRegisterCenterLeaseTtlSeconds=60"  />
 
-    <!--
-        集群多台服务器中的缓存监听器工厂
-        port: 建立RMI连接的端口
-        socketTimeoutMillis： 建立RMI连接的socket超时时间
-    -->
-    <cacheManagerPeerListenerFactory
-            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"
-            properties="port=4001,socketTimeoutMillis=20000" />
+### 说明： 
 
-## 其中： 方式3（redis为注册中心）、方式4（zookeeper为注册中心）、方式5（etcd为注册中心）为自定义扩展方式。
+  - 方式1（手动配置）
+  - 方式1（广播方式）
+  
+  以上两种为ehcache框架原有自带。
+
+  - 方式3（redis为注册中心）、
+  - 方式4（zookeeper为注册中心）、
+  - 方式5（etcd为注册中心）
+  
+  以上三种基于注册中心的为自定义扩展方式。
