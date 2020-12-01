@@ -4,9 +4,11 @@ server:
 spring:
   application:
     name: ehcache-distribution-cache
+  cache:
+    type: ehcache
 logging:
   level:
-    root: debug
+    root: error
   pattern:
     console: '%clr(%d{yyyy-MM-dd} [%thread] %-5level %logger{50} - %msg%n)'
   path: '/home/logs/springboot'
